@@ -1,20 +1,21 @@
-﻿/*
+/*
  *--------------------------------------------------------------------------------
  *文件名: token.hpp
- *创建时间: 2025-06-06 16:23:21 Fri
- *说明: 
+ *创建时间: 2025-06-09 00:57:46 Mon
+ *说明:
  *作者: 九新
  *主机: LAPTOP-VAKT0BRG
  *--------------------------------------------------------------------------------
  *最后编辑作者: 九新
- *最后修改时间: 2025-06-08 22:27:08 Sun
+ *最后修改时间: 2025-06-09 03:21:53 Mon
  *--------------------------------------------------------------------------------
  *Copyright (c) 2025 九新
  *--------------------------------------------------------------------------------
  *更新历史:
  *--------------------------------------------------------------------------------
  *时间      		作者		信息
- *----------		---		------------------------------------------------------
+ *----------		---
+ *------------------------------------------------------
  */
 
 #pragma once
@@ -23,20 +24,27 @@
 
 namespace IrisLang
 {
-	enum TokenType
+	enum class TokenType
 	{
-		NoneToken,
-		EndOfFileToken,
-		UnknownToken,
-		NumberToken,
-		WhiteSpaceToken,
-		PlusToken,
-		MinusToken,
-		MultiplyToken,
-		DivideToken,
-		LeftParenthesisToken,
-		RightParenthesisToken
+		NONE_TOKEN,				   ///< 空令牌
+		END_OF_FILE_TOKEN,		   ///< 文件结束令牌
+		UNKNOWN_TOKEN,			   ///< 未知令牌
+		NUMBER_TOKEN,			   ///< 数字令牌
+		WHITE_SPACE_TOKEN,		   ///< 空白字符令牌
+		PLUS_TOKEN,				   ///< 加号令牌
+		MINUS_TOKEN,			   ///< 减号令牌
+		MULTIPLY_TOKEN,			   ///< 乘号令牌
+		DIVIDE_TOKEN,			   ///< 除号令牌
+		LEFT_PARENTHESIS_TOKEN,	   ///< 左括号令牌
+		RIGHT_PARENTHESIS_TOKEN	   ///< 右括号令牌
 	};
+
+	/**
+	* @brief 静态方法将TokenType转换为字符串
+	* @param type 要转换的TokenType
+	* @return std::string 类型对应的字符串表示
+	*/
+	std::string tokenTypeToString(TokenType type);
 
 	class Token
 	{
@@ -46,40 +54,34 @@ namespace IrisLang
 
 		/**
 		* @brief 构造函数
-		* @param[in] type: 令牌类型
-		* @param[in] position: 令牌位置
-		* @param[in] text: 令牌文本
+		* @param type 令牌类型
+		* @param position 令牌在源代码中的位置
+		* @param text 令牌文本内容
 		*/
-		Token(TokenType type, int position, std::string text): _type(type), _position(position), _text(text) {}
+		Token(TokenType type, std::string text): m_type(type), m_text(text) {}
 
 		/**
 		* @brief 获取令牌类型
-		* @return 返回令牌类型
+		* @return TokenType 令牌类型
 		*/
-		TokenType GetType() const { return _type; }
+		TokenType getType() const { return m_type; }
 
 		/**
 		* @brief 获取令牌位置
-		* @return 返回令牌位置
+		* @return int 令牌在源代码中的位置
 		*/
-		int GetPosition() const { return _position; }
+		//int GetPosition() const { return m_position; }
 
 		/**
 		* @brief 获取令牌文本
-		* @return 返回令牌文本
+		* @return std::string 令牌文本内容
 		*/
-		std::string GetText() const { return _text; }
+		std::string getText() const { return m_text; }
 
-		/**
-		* @brief 将令牌类型转换为字符串
-		* @return 返回一个字符串
-		*/
-		std::string TypeToString() const;
+		private:
 
-		protected:
-
-		TokenType _type = NoneToken;
-		int _position = 0;
-		std::string _text = "";
+		TokenType m_type = TokenType::NONE_TOKEN;	 ///< 令牌类型
+		std::string m_text = "";					 ///< 令牌文本
 	};
+
 }	 // namespace IrisLang

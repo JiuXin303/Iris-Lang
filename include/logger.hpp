@@ -7,7 +7,7 @@
  *主机: LAPTOP-VAKT0BRG
  *--------------------------------------------------------------------------------
  *最后编辑作者: 九新
- *最后修改时间: 2025-06-08 21:41:02 Sun
+ *最后修改时间: 2025-06-09 03:25:37 Mon
  *--------------------------------------------------------------------------------
  *Copyright (c) 2025 九新
  *--------------------------------------------------------------------------------
@@ -20,24 +20,22 @@
 
 #pragma once
 
+#include <chrono>
 #include <iomanip>
 #include <iostream>
 #include <map>
+#include <thread>
 
 namespace IrisLang
 {
-	/**
-	* @brief 日志级别枚举
-	* @details 定义不同级别的日志类型
-	*/
 	enum class LogLevel
 	{
-		Trace,		///< 跟踪级别日志
-		Info,		///< 信息级别日志
-		Debug,		///< 调试级别日志
-		Warning,	///< 警告级别日志
-		Error,		///< 错误级别日志
-		Fatal		///< 致命错误级别日志
+		TRACE_LEVEL,	  ///< 跟踪级别日志
+		INFO_LEVEL,		  ///< 信息级别日志
+		DEBUG_LEVEL,	  ///< 调试级别日志
+		WARNING_LEVEL,	  ///< 警告级别日志
+		ERROR_LEVEL,	  ///< 错误级别日志
+		FATAL_LEVEL		  ///< 致命错误级别日志
 	};
 
 	// ANSI 颜色代码
@@ -49,43 +47,36 @@ namespace IrisLang
 	const std::string ColorFatal = "\033[35m";		///< 紫色
 	const std::string ColorReset = "\033[0m";		///< 重置颜色
 
-	/**
-	* @brief 日志记录器类
-	* @details 提供多级别、带颜色的日志记录功能
-	*/
 	class Logger
 	{
 		public:
 
-		/**
-		* @brief 默认构造函数
-		*/
 		Logger() = default;
 
 		/**
 		* @brief 构造函数，创建指定名称和级别的日志记录器
-		* @param[in] name 日志记录器名称
-		* @param[in] level 日志级别
+		* @param name 日志记录器名称
+		* @param level 日志级别
 		*/
 		explicit Logger(std::string name, LogLevel level) { m_logs[name] = std::make_pair("", level); }
 
 		/**
 		* @brief 打印日志
-		* @param[in] name 日志记录器名称
-		* @param[in] message 日志消息
-		* @param[in] level 日志级别
+		* @param name 日志记录器名称
+		* @param message 日志消息
+		* @param level 日志级别
 		*/
-		static void PrintLog(std::string name, std::string message, LogLevel level)
+		static void printLog(std::string name, std::string message, LogLevel level)
 		{
-			Logger(name, level).PrimaryPrintLog(name, message, level);
+			Logger(name, level).printPrimaryLog(name, message, level);
 		}
 
 		/**
 		* @brief 添加新的日志记录器
-		* @param[in] name 日志记录器名称
-		* @param[in] level 日志级别
+		* @param name 日志记录器名称
+		* @param level 日志级别
 		*/
-		void AddLogger(std::string name, LogLevel level)
+		void addLogger(std::string name, LogLevel level)
 		{
 			if (m_logs.find(name) != m_logs.end())
 			{
@@ -97,10 +88,10 @@ namespace IrisLang
 
 		/**
 		* @brief 设置日志记录器的级别
-		* @param[in] name 日志记录器名称
-		* @param[in] level 新的日志级别
+		* @param name 日志记录器名称
+		* @param level 新的日志级别
 		*/
-		void SetLogLevel(std::string name, LogLevel level)
+		void setLogLevel(std::string name, LogLevel level)
 		{
 			if (m_logs.find(name) != m_logs.end()) m_logs[name].second = level;
 			else std::cout << "Logger not found: " << name << std::endl;
@@ -108,51 +99,51 @@ namespace IrisLang
 
 		/**
 		* @brief 记录跟踪级别日志
-		* @param[in] name 日志记录器名称
-		* @param[in] message 日志消息
+		* @param name 日志记录器名称
+		* @param message 日志消息
 		*/
-		void Trace(std::string name, std::string message) { PrintLog(name, message, LogLevel::Trace); }
+		void trace(std::string name, std::string message) { printPrimaryLog(name, message, LogLevel::TRACE_LEVEL); }
 
 		/**
 		* @brief 记录信息级别日志
-		* @param[in] name 日志记录器名称
-		* @param[in] message 日志消息
+		* @param name 日志记录器名称
+		* @param message 日志消息
 		*/
-		void Info(std::string name, std::string message) { PrintLog(name, message, LogLevel::Info); }
+		void info(std::string name, std::string message) { printPrimaryLog(name, message, LogLevel::INFO_LEVEL); }
 
 		/**
 		* @brief 记录调试级别日志
-		* @param[in] name 日志记录器名称
-		* @param[in] message 日志消息
+		* @param name 日志记录器名称
+		* @param message 日志消息
 		*/
-		void Debug(std::string name, std::string message) { PrintLog(name, message, LogLevel::Debug); }
+		void debug(std::string name, std::string message) { printPrimaryLog(name, message, LogLevel::DEBUG_LEVEL); }
 
 		/**
 		* @brief 记录警告级别日志
-		* @param[in] name 日志记录器名称
-		* @param[in] message 日志消息
+		* @param name 日志记录器名称
+		* @param message 日志消息
 		*/
-		void Warning(std::string name, std::string message) { PrintLog(name, message, LogLevel::Warning); }
+		void warning(std::string name, std::string message) { printPrimaryLog(name, message, LogLevel::WARNING_LEVEL); }
 
 		/**
 		* @brief 记录错误级别日志
-		* @param[in] name 日志记录器名称
-		* @param[in] message 日志消息
+		* @param name 日志记录器名称
+		* @param message 日志消息
 		*/
-		void Error(std::string name, std::string message) { PrintLog(name, message, LogLevel::Error); }
+		void error(std::string name, std::string message) { printPrimaryLog(name, message, LogLevel::ERROR_LEVEL); }
 
 		/**
 		* @brief 记录致命错误级别日志
-		* @param[in] name 日志记录器名称
-		* @param[in] message 日志消息
+		* @param name 日志记录器名称
+		* @param message 日志消息
 		*/
-		void Fatal(std::string name, std::string message) { PrintLog(name, message, LogLevel::Fatal); }
+		void fatal(std::string name, std::string message) { printPrimaryLog(name, message, LogLevel::FATAL_LEVEL); }
 
 		/**
 		* @brief 显示指定日志记录器的所有日志
-		* @param[in] name 日志记录器名称
+		* @param name 日志记录器名称
 		*/
-		void ShowAllLogs(std::string name)
+		void showAllLogs(std::string name)
 		{
 #ifdef USE_LOGGER
 			if (m_logs.find(name) != m_logs.end())
@@ -171,38 +162,38 @@ namespace IrisLang
 
 		/**
 		* @brief 将日志级别转换为字符串
-		* @param[in] level 日志级别
-		* @return 对应的字符串表示
+		* @param level 日志级别
+		* @return std::string 对应的字符串表示
 		*/
-		std::string_view LevelToString(LogLevel level)
+		std::string levelToString(LogLevel level)
 		{
 			switch (level)
 			{
-			case LogLevel::Trace: return "TRACE";
-			case LogLevel::Info: return "INFO";
-			case LogLevel::Debug: return "DEBUG";
-			case LogLevel::Warning: return "WARNING";
-			case LogLevel::Error: return "ERROR";
-			case LogLevel::Fatal: return "FATAL";
+			case LogLevel::TRACE_LEVEL: return "TRACE";
+			case LogLevel::INFO_LEVEL: return "INFO";
+			case LogLevel::DEBUG_LEVEL: return "DEBUG";
+			case LogLevel::WARNING_LEVEL: return "WARNING";
+			case LogLevel::ERROR_LEVEL: return "ERROR";
+			case LogLevel::FATAL_LEVEL: return "FATAL";
 			default: return "UNKNOWN";
 			}
 		}
 
 		/**
 		* @brief 获取指定日志级别对应的颜色代码
-		* @param[in] level 日志级别
-		* @return 对应的ANSI颜色代码
+		* @param level 日志级别
+		* @return std::string 对应的ANSI颜色代码
 		*/
-		std::string GetColor(LogLevel level)
+		std::string getColor(LogLevel level)
 		{
 			switch (level)
 			{
-			case LogLevel::Trace: return ColorTrace;
-			case LogLevel::Info: return ColorInfo;
-			case LogLevel::Debug: return ColorDebug;
-			case LogLevel::Warning: return ColorWarning;
-			case LogLevel::Error: return ColorError;
-			case LogLevel::Fatal: return ColorFatal;
+			case LogLevel::TRACE_LEVEL: return ColorTrace;
+			case LogLevel::INFO_LEVEL: return ColorInfo;
+			case LogLevel::DEBUG_LEVEL: return ColorDebug;
+			case LogLevel::WARNING_LEVEL: return ColorWarning;
+			case LogLevel::ERROR_LEVEL: return ColorError;
+			case LogLevel::FATAL_LEVEL: return ColorFatal;
 			default: return ColorReset;
 			}
 		}
@@ -210,19 +201,39 @@ namespace IrisLang
 #ifdef USE_LOGGER
 		/**
 		* @brief 打印日志
-		* @param[in] name 日志记录器名称
-		* @param[in] message 日志消息
-		* @param[in] level 日志级别(默认为Info)
+		* @param name 日志记录器名称
+		* @param message 日志消息
+		* @param level 日志级别(默认为Info)
 		*/
-		void PrimaryPrintLog(std::string name, std::string message, LogLevel level = LogLevel::Info)
+		void printPrimaryLog(std::string name, std::string message, LogLevel level = LogLevel::INFO_LEVEL)
 		{
 			if (m_logs.find(name) != m_logs.end() && level >= m_logs[name].second)
 			{
-				std::string levelStr = std::string(LevelToString(level));
-				std::string color = GetColor(level);
+				std::cout << std::left;
+
+				// 获取当前时间
+				auto now = std::chrono::system_clock::now();
+				auto now_time = std::chrono::system_clock::to_time_t(now);
+				auto now_ms = std::chrono::duration_cast<std::chrono::milliseconds>(now.time_since_epoch()) % 1000;
+
+				// 格式化时间
+				std::tm tm = *std::localtime(&now_time);
+				std::ostringstream time_oss;
+				time_oss << std::put_time(&tm, "%Y-%m-%d %H:%M:%S") << '.' << std::setfill('0') << std::setw(3)
+						 << now_ms.count();
+
+				// 获取线程ID
+				std::thread::id thread_id = std::this_thread::get_id();
+
+				std::string levelStr = levelToString(level);
+				std::string color = getColor(level);
 				std::ostringstream oss;
-				oss << color << "[" << std::left << std::setw(7) << levelStr << " " << name << "]" << message
-					<< ColorReset << "\n";
+				oss << color << "[" << time_oss.str() << "]"	 // 时间戳
+					<< "[" << std::setw(7) << levelStr << "]"	 // 日志级别
+					<< "[" << thread_id << "]"					 // 线程ID
+					<< "[" << name << "] "						 // 日志名称
+					<< message << ColorReset << "\n";
+
 				std::string logEntry = oss.str();
 				std::cout << logEntry;
 				m_logs[name].first += logEntry;
@@ -236,9 +247,9 @@ namespace IrisLang
 	};
 }	 // namespace IrisLang
 
-#define LOG_TRACE(name, message)   IrisLang::Logger::PrintLog(name, message, IrisLang::LogLevel::Trace)
-#define LOG_INFO(name, message)	   IrisLang::Logger::PrintLog(name, message, IrisLang::LogLevel::Info)
-#define LOG_DEBUG(name, message)   IrisLang::Logger::PrintLog(name, message, IrisLang::LogLevel::Debug)
-#define LOG_WARNING(name, message) IrisLang::Logger::PrintLog(name, message, IrisLang::LogLevel::Warning)
-#define LOG_ERROR(name, message)   IrisLang::Logger::PrintLog(name, message, IrisLang::LogLevel::Error)
-#define LOG_FATAL(name, message)   IrisLang::Logger::PrintLog(name, message, IrisLang::LogLevel::Fatal)
+#define LOG_TRACE(name, message)   IrisLang::Logger::printLog(name, message, IrisLang::LogLevel::TRACE_LEVEL)
+#define LOG_INFO(name, message)	   IrisLang::Logger::printLog(name, message, IrisLang::LogLevel::INFO_LEVEL)
+#define LOG_DEBUG(name, message)   IrisLang::Logger::printLog(name, message, IrisLang::LogLevel::DEBUG_LEVEL)
+#define LOG_WARNING(name, message) IrisLang::Logger::printLog(name, message, IrisLang::LogLevel::WARNING_LEVEL)
+#define LOG_ERROR(name, message)   IrisLang::Logger::printLog(name, message, IrisLang::LogLevel::ERROR_LEVEL)
+#define LOG_FATAL(name, message)   IrisLang::Logger::printLog(name, message, IrisLang::LogLevel::FATAL_LEVEL)

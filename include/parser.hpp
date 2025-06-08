@@ -1,26 +1,27 @@
 /*
  *--------------------------------------------------------------------------------
  *文件名: parser.hpp
- *创建时间: 2025-06-06 19:00:30 Fri
- *说明: 
+ *创建时间: 2025-06-09 00:59:54 Mon
+ *说明:
  *作者: 九新
  *主机: LAPTOP-VAKT0BRG
  *--------------------------------------------------------------------------------
  *最后编辑作者: 九新
- *最后修改时间: 2025-06-08 22:25:37 Sun
+ *最后修改时间: 2025-06-09 03:50:03 Mon
  *--------------------------------------------------------------------------------
  *Copyright (c) 2025 九新
  *--------------------------------------------------------------------------------
  *更新历史:
  *--------------------------------------------------------------------------------
  *时间      		作者		信息
- *----------		---		------------------------------------------------------
+ *----------		---
+ *------------------------------------------------------
  */
 
 #pragma once
+
 #include "expr.hpp"
 
-#include <stdexcept>
 #include <vector>
 
 namespace IrisLang
@@ -33,54 +34,45 @@ namespace IrisLang
 
 		/**
 		* @brief 构造函数
-		* @param[in] text 待解析的文本
+		* @param text 要分析的源代码字符串
 		*/
 		Parser(std::string text);
 
 		/**
 		* @brief 解析二元表达式
-		* @return 表达式节点的向量
+		* @return std::vector<ExprNode*> 解析生成的表达式节点列表
 		*/
-		std::vector<ExprNode*> ParseBinaryExpr();
+		std::vector<ExprNode*> parseBinaryExpr();
 
 		~Parser()
 		{
-			for (auto expr: _ExprChildrens) delete expr;
+			for (auto expr: m_exprChildrens) delete expr;
 		}
 
 		/**
-		* @brief 获取解析后的表达式节点
-		* @return 表达式节点的向量
+		* @brief 获取解析后的令牌序列
+		* @return std::vector<Token> 令牌序列
 		*/
-		std::vector<Token> GetTokens() const { return _tokens; }
+		std::vector<Token> getTokens() const { return m_tokens; }
 
 		private:
 
 		/**
-		* @brief 获取当前令牌，自动移动位置
-		* @return 当前令牌
+		* @brief 匹配指定类型的令牌
+		* @param type 要匹配的令牌类型
+		* @return Token 匹配到的令牌
 		*/
-		Token GetNextToken()
-		{
-			if (_position >= _tokens.size()) throw std::out_of_range("GetNextToken: position out of range");
-			return _tokens[_position++];
-		}
+		Token match(TokenType type);
 
 		/**
-		* @brief 匹配指定类型令牌
-		* @param[in] type 要匹配的令牌类型
-		* @return 匹配到的令牌
+		* @brief 解析基本表达式
+		* @param type 期望的令牌类型
+		* @return ExprNode* 解析生成的表达式节点
 		*/
-		Token Match(TokenType type);
+		ExprNode* parsePrimaryExpr(TokenType type);
 
-		/**
-		* @brief 解析一个表达式
-		* @return 表达式节点
-		*/
-		ExprNode* ParserPrimaryExpr(TokenType type);
-
-		int _position = 0;
-		std::vector<Token> _tokens = {};
-		std::vector<ExprNode*> _ExprChildrens = {};
+		int m_position = 0;								///< 当前解析位置
+		std::vector<Token> m_tokens = {};				///< 令牌序列
+		std::vector<ExprNode*> m_exprChildrens = {};	///< 表达式节点列表
 	};
 }	 // namespace IrisLang

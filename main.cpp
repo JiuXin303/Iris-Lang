@@ -7,7 +7,7 @@
  *主机: LAPTOP-VAKT0BRG
  *--------------------------------------------------------------------------------
  *最后编辑作者: 九新
- *最后修改时间: 2025-06-08 23:51:44 Sun
+ *最后修改时间: 2025-06-09 04:19:18 Mon
  *--------------------------------------------------------------------------------
  *Copyright (c) 2025 九新
  *--------------------------------------------------------------------------------
@@ -23,12 +23,16 @@
 #include <version.hpp>
 using namespace std;
 
-// 打印表达式树
+/**
+* @brief 打印表达式节点
+* @param node 表达式节点
+* @param indent 缩进
+*/
 void PrettyPrint(IrisLang::ExprNode node, std::string indent = "")
 {
 	cout << indent;
-	cout << "Type: " << node.TypeToString();
-	if (node._Value.length() != 0) cout << " Value: " << node._Value << endl;
+	cout << "Type: " << IrisLang::exprTypeToString(node.m_type);
+	if (node.m_value.length() != 0) cout << " Value: " << node.m_value << endl;
 }
 
 auto main(int argc, char* argv[]) -> int
@@ -54,12 +58,12 @@ auto main(int argc, char* argv[]) -> int
 
 		// 解析表达式
 		IrisLang::Parser parser(input);
-		auto expr = parser.ParseBinaryExpr();
+		auto expr = parser.parseBinaryExpr();
 		std::string indent = "";
 		for (auto expr_it = expr.rbegin(); expr_it != expr.rend(); expr_it++)
 		{
 			IrisLang::ExprNode node = **expr_it;
-			if (node._Type == IrisLang::BinaryExpr)
+			if (node.m_type == IrisLang::ExprType::BINARY_EXPR)
 			{
 				PrettyPrint(node, indent);
 				indent += "|————";

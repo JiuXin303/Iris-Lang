@@ -1,78 +1,65 @@
 /*
  *--------------------------------------------------------------------------------
  *文件名: expr.hpp
- *创建时间: 2025-06-06 19:55:01 Fri
- *说明: 
+ *创建时间: 2025-06-09 00:55:58 Mon
+ *说明:
  *作者: 九新
  *主机: LAPTOP-VAKT0BRG
  *--------------------------------------------------------------------------------
  *最后编辑作者: 九新
- *最后修改时间: 2025-06-08 22:11:29 Sun
+ *最后修改时间: 2025-06-09 04:40:41 Mon
  *--------------------------------------------------------------------------------
  *Copyright (c) 2025 九新
  *--------------------------------------------------------------------------------
  *更新历史:
  *--------------------------------------------------------------------------------
  *时间      		作者		信息
- *----------		---		------------------------------------------------------
+ *----------		---
+ *------------------------------------------------------
  */
 
 #pragma once
+
 #include "token.hpp"
 
 #include <logger.hpp>
 
 namespace IrisLang
 {
-	/**
-	* @brief 表达式类型
-	*/
-	enum ExprType
+	enum class ExprType
 	{
-		NoneExpr,		 ///< 空表达式
-		NumberExpr,		 ///< 数字表达式
-		OperatorExpr,	 ///< 运算符表达式
-		BinaryExpr,		 ///< 二元表达式
-		UnknowExpr,		 ///< 未知表达式
+		NONE_EXPR,		  ///< 空表达式
+		NUMBER_EXPR,	  ///< 数字表达式
+		OPERATOR_EXPR,	  ///< 运算符表达式
+		BINARY_EXPR,	  ///< 二元表达式
+		UNKNOW_EXPR,	  ///< 未知表达式
 	};
 
 	/**
-	* @brief 表达式节点
+	* @brief 将类型转换为字符串
+	* @param type 表达式类型
+	* @return std::string 类型字符串
 	*/
-	typedef struct ExprNode
+	std::string exprTypeToString(IrisLang::ExprType type);
+
+	class ExprNode
 	{
 		public:
 
 		ExprNode() = default;
+		virtual ~ExprNode() = default;
 
 		/**
 		* @brief 构造函数
-		* @param[in] value 表达式的值
-		* @param[in] type 表达式的类型
+		* @param value 表达式的值
+		* @param type 表达式的类型
 		*/
-		ExprNode(std::string value, ExprType type): _Value(value), _Type(type) {}
+		ExprNode(std::string value, ExprType type): m_value(value), m_type(type) {}
 
-		/**
-		* @brief 将类型转换为字符串
-		* @return 类型字符串
-		*/
-		std::string TypeToString() const;
+		std::string m_value = "";				  ///< 表达式的值
+		ExprType m_type = ExprType::NONE_EXPR;	  ///< 表达式类型
+	};
 
-		/**
-		* @brief 克隆节点
-		* @return 克隆的节点
-		*/
-		virtual ExprNode* Clone() const { return new ExprNode(_Value, _Type); }
-
-		std::string _Value = "";
-
-		ExprType _Type = NoneExpr;
-
-	} ExprNode;
-
-	/**
-	* @brief 数字表达式
-	*/
 	class NumberExprSyntax: public ExprNode
 	{
 		public:
@@ -81,24 +68,15 @@ namespace IrisLang
 
 		/**
 		* @brief 构造函数
-		* @param[in] number 数字令牌
+		* @param number 数字令牌
 		*/
 		NumberExprSyntax(Token number)
 		{
-			ExprNode::_Value = number.GetText();
-			ExprNode::_Type = NumberExpr;
+			ExprNode::m_value = number.getText();
+			ExprNode::m_type = ExprType::NUMBER_EXPR;
 		}
-
-		/**
-		* @brief 克隆节点
-		* @return 克隆的节点
-		*/
-		ExprNode* Clone() const override { return new NumberExprSyntax(*this); }
 	};
 
-	/**
-	* @brief 二元表达式
-	*/
 	class BinaryExprSyntax: public ExprNode
 	{
 		public:
@@ -107,58 +85,25 @@ namespace IrisLang
 
 		/**
 		* @brief 构造函数
-		* @param[in] left 左子表达式
-		* @param[in] op 运算符
-		* @param[in] right 右子表达式
+		* @param left 左子表达式
+		* @param op 运算符令牌
+		* @param right 右子表达式
 		*/
-		BinaryExprSyntax(ExprNode* left, Token op, ExprNode* right): _Left(left), _Op(op), _Right(right)
+		BinaryExprSyntax(ExprNode left, ExprNode op, ExprNode right)
 		{
 			try
 			{
-				if (left == nullptr || right == nullptr) throw std::runtime_error(": left or right is null");
+				if (left.m_value.empty() || right.m_value.empty())
+					throw std::runtime_error("BinaryExprSyntax: left or right is null");
 			}
 			catch (const std::exception& e)
 			{
-				LOG_ERROR("BinaryExprSyntax", e.what());
+				LOG_ERROR("Expr", e.what());
 			}
-			ExprNode::_Value = _Left->_Value + _Op.GetText() + _Right->_Value;
-			ExprNode::_Type = BinaryExpr;
+			ExprNode::m_value = left.m_value + op.m_value + right.m_value;
+			ExprNode::m_type = ExprType::BINARY_EXPR;
 		}
 
-		~BinaryExprSyntax()
-		{
-			if (_Left) delete _Left;
-			if (_Right) delete _Right;
-		}
-
-		/**
-		* @brief 获取左子表达式
-		* @return 左子表达式
-		*/
-		Token GetOp() const { return _Op; }
-
-		/**
-		* @brief 获取左子表达式
-		* @return 左子表达式
-		*/
-		ExprNode* GetLeft() const { return _Left; }
-
-		/**
-		* @brief 获取右子表达式
-		* @return 右子表达式
-		*/
-		ExprNode* GetRight() const { return _Right; }
-
-		/**
-		* @brief 克隆节点
-		* @return 克隆的节点
-		*/
-		ExprNode* Clone() const override { return new BinaryExprSyntax(_Left->Clone(), _Op, _Right->Clone()); }
-
-		private:
-
-		ExprNode* _Left = {};
-		Token _Op;
-		ExprNode* _Right = {};
+		ExprNode* clone() { return new ExprNode(ExprNode::m_value, ExprNode::m_type); }
 	};
 }	 // namespace IrisLang
