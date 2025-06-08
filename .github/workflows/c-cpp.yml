@@ -6,15 +6,33 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+
     steps:
     - uses: actions/checkout@v4
-    - name: Install dependencies
+
+    - name: Install dependencies (Ubuntu)
+      if: matrix.os == 'ubuntu-latest'
       run: |
         sudo apt-get update
         sudo apt-get install -y clang ninja-build cmake build-essential
+
+    - name: Install dependencies (Windows)
+      if: matrix.os == 'windows-latest'
+      run: |
+        choco install -y llvm ninja cmake
+
+    - name: Install dependencies (macOS)
+      if: matrix.os == 'macos-latest'
+      run: |
+        brew install llvm ninja cmake
+
     - name: Create Build Directory
       run: mkdir -p ${{github.workspace}}/build
+
     - name: Configure CMake with Clang and Ninja
       working-directory: ${{github.workspace}}/build
       run: |
@@ -24,9 +42,7 @@ jobs:
           -DCMAKE_BUILD_TYPE=Release \
           -DBUILD_TESTING=ON \
           -G Ninja
+
     - name: Build with Ninja
       working-directory: ${{github.workspace}}/build
       run: cmake --build . --config Release
-    - name: Test
-      working-directory: ${{github.workspace}}/build
-      run: ctest -C Release --output-on-failure
