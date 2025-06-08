@@ -1,0 +1,20 @@
+{
+  "configurations": [
+    {
+      "name": "Windows",
+      "cStandard": "c17",
+      "cppStandard": "c++23"
+    },
+    {
+      "name": "Linux",
+      "cStandard": "c17",
+      "cppStandard": "c++23"
+    },
+    {
+      "name": "Mac",
+      "cStandard": "c17",
+      "cppStandard": "c++23"
+    }
+  ],
+  "version": 4
+}

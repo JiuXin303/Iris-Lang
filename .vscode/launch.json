@@ -1,0 +1,26 @@
+/*
+ * Filename: /home/kolo/code/Iris-lang/.vscode/launch.json
+ * Path: /home/kolo/code/Iris-lang/.vscode
+ * Created Date: Friday, June 6th 2025, 4:12:23 pm
+ * Author: 九新
+ * 
+ * Copyright (c) 2025 Your Company
+ */
+{
+	// 使用 IntelliSense 了解相关属性。 
+	// 悬停以查看现有属性的描述。
+	// 欲了解更多信息，请访问: https://go.microsoft.com/fwlink/?linkid=830387
+	"version": "0.2.0",
+	"configurations": [
+		{
+			"type": "lldb",
+			"request": "launch",
+			"name": "CodeLLDB Debug",
+			"program": "${workspaceFolder}/bin/iris-compiler",
+			"args": [
+				"connect=localhost:50051",
+			],
+			"cwd": "${workspaceFolder}",
+		}
+	]
+}

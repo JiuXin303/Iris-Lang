@@ -1,0 +1,9 @@
+﻿语法树:
+BinaryExpr:
+|—— NumberExpr
+|—— NumberToken 1
+|—— PlusToken +
+|—— NumberToken 2
+|—— NumberExpr
+|———— PlusToken +
+|———— NumberToken 3
