@@ -33,13 +33,14 @@ if (CMAKE_BUILD_TYPE STREQUAL "Debug")
 	set(CMAKE_CXX_FLAGS_DEBUG "-O0 -g -fsanitize=address")
 	set(CMAKE_EXE_LINKER_FLAGS_DEBUG "-fsanitize=address")
 	add_definitions(-DUSE_LOGGER)
-endif()
-add_executable(iris-compiler ${iris-compiler_SRCS})
-target_compile_features(iris-compiler PUBLIC cxx_std_23)
-target_include_directories(iris-compiler PUBLIC ${CMAKE_SOURCE_DIR}/include)
-add_custom_target(
+	add_custom_target(
     run_asan
     COMMAND ASAN_OPTIONS=detect_leaks=1 ./${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
     WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
     DEPENDS iris-compiler
 )
+endif()
+add_executable(iris-compiler ${iris-compiler_SRCS})
+target_compile_features(iris-compiler PUBLIC cxx_std_23)
+target_include_directories(iris-compiler PUBLIC ${CMAKE_SOURCE_DIR}/include)
+
