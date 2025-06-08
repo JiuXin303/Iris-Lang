@@ -7,7 +7,7 @@
  *主机: LAPTOP-VAKT0BRG
  *--------------------------------------------------------------------------------
  *最后编辑作者: 九新
- *最后修改时间: 2025-06-08 22:31:45 Sun
+ *最后修改时间: 2025-06-08 23:51:44 Sun
  *--------------------------------------------------------------------------------
  *Copyright (c) 2025 九新
  *--------------------------------------------------------------------------------
@@ -50,7 +50,7 @@ auto main(int argc, char* argv[]) -> int
 			is_running = false;
 			break;
 		}
-		auto start_time = chrono::high_resolution_clock::now();
+		auto start_time = chrono::system_clock::now();
 
 		// 解析表达式
 		IrisLang::Parser parser(input);
@@ -71,7 +71,7 @@ auto main(int argc, char* argv[]) -> int
 		};
 
 		// 打印运行时间
-		auto end_time = chrono::high_resolution_clock::now();
+		auto end_time = chrono::system_clock::now();
 		auto duration = chrono::duration_cast<chrono::microseconds>(end_time - start_time);
 		time_t end_time_t = chrono::system_clock::to_time_t(end_time);
 		tm* timeinfo = localtime(&end_time_t);
