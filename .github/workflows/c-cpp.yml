@@ -30,6 +30,6 @@ jobs:
     - name: Test
       working-directory: ${{github.workspace}}/build
       run: ctest -C Release --output-on-failure
-    - name: Package
+    - name: iris-compiler
       working-directory: ${{github.workspace}}/build
-      run: cmake --build . --target package
+      run: cmake --build . --target iris-compiler
