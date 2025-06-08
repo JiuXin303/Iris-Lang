@@ -20,29 +20,51 @@ jobs:
         sudo apt-get update
         sudo apt-get install -y clang ninja-build cmake build-essential
 
-    - name: Install dependencies (Windows)
-      if: matrix.os == 'windows-latest'
+    - name: Build on Ubuntu
+      if: matrix.os == 'ubuntu-latest'
       run: |
-        choco install -y llvm ninja cmake
-
-    - name: Install dependencies (macOS)
-      if: matrix.os == 'macos-latest'
-      run: |
-        brew install llvm ninja cmake
-
-    - name: Create Build Directory
-      run: mkdir -p ${{github.workspace}}/build
-
-    - name: Configure CMake with Clang and Ninja
-      working-directory: ${{github.workspace}}/build
-      run: |
+        mkdir -p ${{github.workspace}}/build
+        cd ${{github.workspace}}/build
         cmake .. \
           -DCMAKE_C_COMPILER=clang \
           -DCMAKE_CXX_COMPILER=clang++ \
           -DCMAKE_BUILD_TYPE=Release \
           -DBUILD_TESTING=ON \
           -G Ninja
+        cmake --build . --config Release
 
-    - name: Build with Ninja
-      working-directory: ${{github.workspace}}/build
-      run: cmake --build . --config Release
+    - name: Install dependencies (Windows)
+      if: matrix.os == 'windows-latest'
+      run: |
+        choco install -y llvm ninja cmake
+
+    - name: Build on Windows
+      if: matrix.os == 'windows-latest'
+      run: |
+        mkdir ${{github.workspace}}\build
+        cd ${{github.workspace}}\build
+        cmake .. `
+          -DCMAKE_C_COMPILER=clang-cl `
+          -DCMAKE_CXX_COMPILER=clang-cl `
+          -DCMAKE_BUILD_TYPE=Release `
+          -DBUILD_TESTING=ON `
+          -G Ninja
+        cmake --build . --config Release
+
+    - name: Install dependencies (macOS)
+      if: matrix.os == 'macos-latest'
+      run: |
+        brew install llvm ninja cmake
+
+    - name: Build on macOS
+      if: matrix.os == 'macos-latest'
+      run: |
+        mkdir -p ${{github.workspace}}/build
+        cd ${{github.workspace}}/build
+        cmake .. \
+          -DCMAKE_C_COMPILER=clang \
+          -DCMAKE_CXX_COMPILER=clang++ \
+          -DCMAKE_BUILD_TYPE=Release \
+          -DBUILD_TESTING=ON \
+          -G Ninja
+        cmake --build . --config Release
