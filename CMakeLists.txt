@@ -15,8 +15,8 @@ list(APPEND iris-compiler_SRCS ${CMAKE_SOURCE_DIR}/source/parser.cpp)
 list(APPEND iris-compiler_SRCS ${CMAKE_SOURCE_DIR}/source/expr.cpp)
 
 
-option(Build-test "Build test" ON)
-if(Build-test)
+option(BUILD-TEST "Build test" OFF)
+if(BUILD-TEST)
 	# 日志测试
 	if (CMAKE_BUILD_TYPE STREQUAL "Debug")
     	add_definitions(-DUSE_LOGGER)

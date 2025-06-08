@@ -7,7 +7,7 @@
  *主机: LAPTOP-VAKT0BRG
  *--------------------------------------------------------------------------------
  *最后编辑作者: 九新
- *最后修改时间: 2025-06-09 03:25:37 Mon
+ *最后修改时间: 2025-06-09 05:20:57 Mon
  *--------------------------------------------------------------------------------
  *Copyright (c) 2025 九新
  *--------------------------------------------------------------------------------
@@ -240,7 +240,7 @@ namespace IrisLang
 			}
 		}
 #else
-		void PrimaryPrintLog(std::string name, std::string message, LogLevel level = LogLevel::Info) {}
+		void printPrimaryLog(std::string name, std::string message, LogLevel level = LogLevel::INFO_LEVEL) {}
 #endif
 
 		std::map<std::string, std::pair<std::string, LogLevel>> m_logs;	   ///< 日志记录器存储
