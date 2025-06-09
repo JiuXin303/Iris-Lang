@@ -20,8 +20,9 @@ if (CMAKE_BUILD_TYPE STREQUAL "Debug")
 		set(CMAKE_CXX_FLAGS_DEBUG "-O0 -g -fsanitize=address /INFERASANLIBS")
 	else()
 		set(CMAKE_CXX_FLAGS_DEBUG "-O0 -g -fsanitize=address")
-		set(CMAKE_EXE_LINKER_FLAGS_DEBUG "-fsanitize=address")
 	endif()
+	set(CMAKE_EXE_LINKER_FLAGS_DEBUG "-fsanitize=address")
+
 	add_custom_target(
 	run_asan
 	COMMAND ASAN_OPTIONS=detect_leaks=1 ./${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
