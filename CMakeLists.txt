@@ -17,11 +17,11 @@ list(APPEND iris-compiler_SRCS ${CMAKE_SOURCE_DIR}/source/expr.cpp)
 if (CMAKE_BUILD_TYPE STREQUAL "Debug")
 	# Debug 配置开启 ASAN
 	if (CMAKE_SYSTEM_NAME MATCHES "Windows")
-		set(CMAKE_CXX_FLAGS_DEBUG "-fsanitize=address")
-	else()
-		set(CMAKE_CXX_FLAGS_DEBUG "-O0 -g -fsanitize=address")
-		set(CMAKE_EXE_LINKER_FLAGS_DEBUG "-fsanitize=address")
+		string(REPLACE "-MDd" "" CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG}")
 	endif()
+	set(CMAKE_CXX_FLAGS_DEBUG "-O0 -g -fsanitize=address")
+	set(CMAKE_EXE_LINKER_FLAGS_DEBUG "-fsanitize=address")
+
 	add_custom_target(
 	run_asan
 	COMMAND ASAN_OPTIONS=detect_leaks=1 ./${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
