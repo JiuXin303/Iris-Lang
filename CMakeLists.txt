@@ -17,11 +17,12 @@ list(APPEND iris-compiler_SRCS ${CMAKE_SOURCE_DIR}/source/expr.cpp)
 if (CMAKE_BUILD_TYPE STREQUAL "Debug")
 	# Debug 配置开启 ASAN
 	if (CMAKE_SYSTEM_NAME MATCHES "Windows")
-		set(CMAKE_CXX_FLAGS_DEBUG "-O0 -g -fsanitize=address /INFERASANLIBS")
+		set(CMAKE_CXX_FLAGS_DEBUG "-O0 -g -fsanitize=address /INFERASANLIBS:ON /wholearchive:clang_rt.asan_dbg_dll_thunk-<arch>.lib")
+		set(CMAKE_EXE_LINKER_FLAGS_DEBUG "-fsanitize=address /INFERASANLIBS:ON /wholearchive:clang_rt.asan_dbg-<arch>.lib")
 	else()
 		set(CMAKE_CXX_FLAGS_DEBUG "-O0 -g -fsanitize=address")
+		set(CMAKE_EXE_LINKER_FLAGS_DEBUG "-fsanitize=address")
 	endif()
-	set(CMAKE_EXE_LINKER_FLAGS_DEBUG "-fsanitize=address")
 
 	add_custom_target(
 	run_asan
