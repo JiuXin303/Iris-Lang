@@ -16,6 +16,9 @@ list(APPEND iris-compiler_SRCS ${CMAKE_SOURCE_DIR}/source/expr.cpp)
 
 if (CMAKE_BUILD_TYPE STREQUAL "Debug")
 	# Debug 配置开启 ASAN
+	if(CMAKE_SYSTEM_NAME MATCHES "Windows")
+		string(REPLAE "/MDd" "/MD" CMAKE_CXX_FLAGS_DEBUG ${CMAKE_CXX_FLAGS_DEBUG}) 
+	endif()
 	set(CMAKE_CXX_FLAGS_DEBUG "-O0 -g -fsanitize=address")
 	set(CMAKE_EXE_LINKER_FLAGS_DEBUG "-fsanitize=address")
 

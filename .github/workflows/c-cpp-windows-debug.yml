@@ -22,6 +22,7 @@ jobs:
         cmake .. `
           -DCMAKE_C_COMPILER=clang-cl `
           -DCMAKE_CXX_COMPILER=clang-cl `
+          -DCMAKE_BUILD_TYPE=Debug `
           -DBUILD_TEST=ON `
           -G Ninja
         cmake --build . --config Debug
