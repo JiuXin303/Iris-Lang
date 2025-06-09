@@ -56,11 +56,11 @@ jobs:
       run: |
         mkdir ${{github.workspace}}\build
         cd ${{github.workspace}}\build
-        cmake .. `
-          -DCMAKE_C_COMPILER=clang-cl `
-          -DCMAKE_CXX_COMPILER=clang-cl `
-          -DCMAKE_BUILD_TYPE=Debug `
-          -DBUILD_TEST=ON `
+        cmake .. \
+          -DCMAKE_C_COMPILER=clang-cl \
+          -DCMAKE_CXX_COMPILER=clang-cl \
+          -DCMAKE_BUILD_TYPE=Debug \
+          -DBUILD_TEST=ON \
           -G Ninja
         cmake --build . --config Debug
 
@@ -69,11 +69,11 @@ jobs:
       run: |
         mkdir ${{github.workspace}}\build
         cd ${{github.workspace}}\build
-        cmake .. `
-          -DCMAKE_C_COMPILER=clang-cl `
-          -DCMAKE_CXX_COMPILER=clang-cl `
-          -DCMAKE_BUILD_TYPE=Release `
-          -DBUILD_TEST=ON `
+        cmake .. \
+          -DCMAKE_C_COMPILER=clang-cl \
+          -DCMAKE_CXX_COMPILER=clang-cl \
+          -DCMAKE_BUILD_TYPE=Release \
+          -DBUILD_TEST=ON \
           -G Ninja
         cmake --build . --config Release
 
