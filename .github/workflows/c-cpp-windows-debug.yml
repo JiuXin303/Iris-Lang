@@ -22,19 +22,6 @@ jobs:
         cmake .. `
           -DCMAKE_C_COMPILER=clang-cl `
           -DCMAKE_CXX_COMPILER=clang-cl `
-          -DCMAKE_BUILD_TYPE=Debug `
           -DBUILD_TEST=ON `
           -G Ninja
-        cmake --build .
-
-    - name: Build on Windows (release)
-      run: |
-        mkdir ${{github.workspace}}\build
-        cd ${{github.workspace}}\build
-        cmake .. `
-          -DCMAKE_C_COMPILER=clang-cl `
-          -DCMAKE_CXX_COMPILER=clang-cl `
-          -DCMAKE_BUILD_TYPE=Release `
-          -DBUILD_TEST=ON `
-          -G Ninja
-        cmake --build . --config Release
+        cmake --build . --config Debug

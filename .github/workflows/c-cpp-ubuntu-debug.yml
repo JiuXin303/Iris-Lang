@@ -27,15 +27,3 @@ jobs:
           -DBUILD_TEST=ON \
           -G Ninja
         cmake --build . --config Debug
-
-    - name: Build on Ubuntu (release)
-      run: |
-        mkdir -p ${{github.workspace}}/build
-        cd ${{github.workspace}}/build
-        cmake .. \
-          -DCMAKE_C_COMPILER=clang \
-          -DCMAKE_CXX_COMPILER=clang++ \
-          -DCMAKE_BUILD_TYPE=Release \
-          -DBUILD_TEST=ON \
-          -G Ninja
-        cmake --build . --config Release

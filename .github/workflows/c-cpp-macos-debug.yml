@@ -1,0 +1,28 @@
+﻿on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+  build:
+    runs-on: macos-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Install dependencies (macOS)
+      run: |
+        brew install llvm ninja cmake
+
+    - name: Build on macOS (debug)
+      run: |
+        mkdir -p ${{github.workspace}}/build
+        cd ${{github.workspace}}/build
+        cmake .. \
+          -DCMAKE_C_COMPILER=clang \
+          -DCMAKE_CXX_COMPILER=clang++ \
+          -DCMAKE_BUILD_TYPE=Debug \
+          -DBUILD_TEST=ON \
+          -G Ninja
+        cmake --build . --config Debug
