@@ -7,7 +7,7 @@
  *主机: LAPTOP-VAKT0BRG
  *--------------------------------------------------------------------------------
  *最后编辑作者: 九新
- *最后修改时间: 2025-06-09 19:05:27 Mon
+ *最后修改时间: 2025-06-09 22:17:10 Mon
  *--------------------------------------------------------------------------------
  *Copyright (c) 2025 九新
  *--------------------------------------------------------------------------------
@@ -47,8 +47,7 @@ BinaryExprSyntax::BinaryExprSyntax(ExprNode left, ExprNode op, ExprNode right)
 		LOG_ERROR("Expr", e.what());
 	}
 
-	ExprNode::m_evalResult =
-		Evaluator<double>().evaluate(std::stod(left.m_value), op.m_value, std::stod(right.m_value));
+	ExprNode::m_evalResult = Evaluator<double>().evaluate(left.m_evalResult, op.m_value, right.m_evalResult);
 
 	ExprNode::m_value = left.m_value + op.m_value + right.m_value;
 	ExprNode::m_type = ExprType::BINARY_EXPR;
