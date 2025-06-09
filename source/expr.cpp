@@ -7,7 +7,7 @@
  *主机: LAPTOP-VAKT0BRG
  *--------------------------------------------------------------------------------
  *最后编辑作者: 九新
- *最后修改时间: 2025-06-09 03:23:32 Mon
+ *最后修改时间: 2025-06-09 19:05:27 Mon
  *--------------------------------------------------------------------------------
  *Copyright (c) 2025 九新
  *--------------------------------------------------------------------------------
@@ -18,11 +18,7 @@
  *------------------------------------------------------
  */
 
-/**
- * @file expr.cpp
- * @brief 表达式节点方法的实现
- */
-
+#include <evaluator.hpp>
 #include <expr.hpp>
 
 using namespace IrisLang;
@@ -38,4 +34,22 @@ std::string IrisLang::exprTypeToString(ExprType type)
 	case ExprType::UNKNOW_EXPR: return "UnknowExpr"; break;
 	default: return "UnknownExpr"; break;
 	}
+}
+
+BinaryExprSyntax::BinaryExprSyntax(ExprNode left, ExprNode op, ExprNode right)
+{
+	try
+	{
+		if (left.m_value.empty() || right.m_value.empty()) throw std::runtime_error("left or right is null");
+	}
+	catch (const std::exception& e)
+	{
+		LOG_ERROR("Expr", e.what());
+	}
+
+	ExprNode::m_evalResult =
+		Evaluator<double>().evaluate(std::stod(left.m_value), op.m_value, std::stod(right.m_value));
+
+	ExprNode::m_value = left.m_value + op.m_value + right.m_value;
+	ExprNode::m_type = ExprType::BINARY_EXPR;
 }

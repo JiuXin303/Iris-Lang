@@ -7,7 +7,7 @@
  *主机: LAPTOP-VAKT0BRG
  *--------------------------------------------------------------------------------
  *最后编辑作者: 九新
- *最后修改时间: 2025-06-09 04:40:41 Mon
+ *最后修改时间: 2025-06-09 19:24:40 Mon
  *--------------------------------------------------------------------------------
  *Copyright (c) 2025 九新
  *--------------------------------------------------------------------------------
@@ -22,7 +22,8 @@
 
 #include "token.hpp"
 
-#include <logger.hpp>
+#include <iostream>
+#include <memory>
 
 namespace IrisLang
 {
@@ -54,8 +55,12 @@ namespace IrisLang
 		* @param value 表达式的值
 		* @param type 表达式的类型
 		*/
-		ExprNode(std::string value, ExprType type): m_value(value), m_type(type) {}
+		ExprNode(double evalResult, std::string value, ExprType type):
+			m_evalResult(evalResult), m_value(value), m_type(type)
+		{
+		}
 
+		double m_evalResult = 0.0;				  ///< 表达式的求值结果
 		std::string m_value = "";				  ///< 表达式的值
 		ExprType m_type = ExprType::NONE_EXPR;	  ///< 表达式类型
 	};
@@ -72,8 +77,14 @@ namespace IrisLang
 		*/
 		NumberExprSyntax(Token number)
 		{
+			ExprNode::m_evalResult = std::stod(number.getText());
 			ExprNode::m_value = number.getText();
 			ExprNode::m_type = ExprType::NUMBER_EXPR;
+		}
+
+		std::shared_ptr<ExprNode> clone()
+		{
+			return std::make_shared<ExprNode>(ExprNode(ExprNode::m_evalResult, ExprNode::m_value, ExprNode::m_type));
 		}
 	};
 
@@ -89,21 +100,11 @@ namespace IrisLang
 		* @param op 运算符令牌
 		* @param right 右子表达式
 		*/
-		BinaryExprSyntax(ExprNode left, ExprNode op, ExprNode right)
-		{
-			try
-			{
-				if (left.m_value.empty() || right.m_value.empty())
-					throw std::runtime_error("BinaryExprSyntax: left or right is null");
-			}
-			catch (const std::exception& e)
-			{
-				LOG_ERROR("Expr", e.what());
-			}
-			ExprNode::m_value = left.m_value + op.m_value + right.m_value;
-			ExprNode::m_type = ExprType::BINARY_EXPR;
-		}
+		BinaryExprSyntax(ExprNode left, ExprNode op, ExprNode right);
 
-		ExprNode* clone() { return new ExprNode(ExprNode::m_value, ExprNode::m_type); }
+		std::shared_ptr<ExprNode> clone()
+		{
+			return std::make_shared<ExprNode>(ExprNode(ExprNode::m_evalResult, ExprNode::m_value, ExprNode::m_type));
+		}
 	};
 }	 // namespace IrisLang

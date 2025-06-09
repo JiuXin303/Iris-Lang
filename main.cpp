@@ -7,7 +7,7 @@
  *主机: LAPTOP-VAKT0BRG
  *--------------------------------------------------------------------------------
  *最后编辑作者: 九新
- *最后修改时间: 2025-06-09 04:54:17 Mon
+ *最后修改时间: 2025-06-09 18:59:41 Mon
  *--------------------------------------------------------------------------------
  *Copyright (c) 2025 九新
  *--------------------------------------------------------------------------------
@@ -32,7 +32,10 @@ void PrettyPrint(IrisLang::ExprNode node, std::string indent = "")
 {
 	cout << indent;
 	cout << "Type: " << IrisLang::exprTypeToString(node.m_type);
-	if (node.m_value.length() != 0) cout << " Value: " << node.m_value << endl;
+	if (node.m_value.length() != 0) cout << " Value: " << node.m_value;
+	if (node.m_type == IrisLang::ExprType::BINARY_EXPR || node.m_type == IrisLang::ExprType::NUMBER_EXPR)
+		cout << " EvalResult: " << node.m_evalResult;
+	cout << endl;
 }
 
 auto main(int argc, char* argv[]) -> int
@@ -41,8 +44,8 @@ auto main(int argc, char* argv[]) -> int
 	bool is_running = true;
 
 	// 打印基本信息
-	cout << "Iris Lang v" << IRIS_VERSION_STRING << "." << endl;
-	cout << "Platfrom: " << IRIS_PLATFORM_STRING << "." << endl;
+	cout << "Iris v" << IRIS_VERSION_STRING << " "
+		 << "platfrom for " << IRIS_PLATFORM_STRING << "." << endl;
 	cout << "Input 'exit()' to exit." << endl;
 
 	while (is_running)

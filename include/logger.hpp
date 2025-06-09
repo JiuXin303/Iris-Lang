@@ -7,7 +7,7 @@
  *主机: LAPTOP-VAKT0BRG
  *--------------------------------------------------------------------------------
  *最后编辑作者: 九新
- *最后修改时间: 2025-06-09 05:20:57 Mon
+ *最后修改时间: 2025-06-09 19:36:49 Mon
  *--------------------------------------------------------------------------------
  *Copyright (c) 2025 九新
  *--------------------------------------------------------------------------------
@@ -209,8 +209,6 @@ namespace IrisLang
 		{
 			if (m_logs.find(name) != m_logs.end() && level >= m_logs[name].second)
 			{
-				std::cout << std::left;
-
 				// 获取当前时间
 				auto now = std::chrono::system_clock::now();
 				auto now_time = std::chrono::system_clock::to_time_t(now);
@@ -228,10 +226,10 @@ namespace IrisLang
 				std::string levelStr = levelToString(level);
 				std::string color = getColor(level);
 				std::ostringstream oss;
-				oss << color << "[" << time_oss.str() << "]"	 // 时间戳
-					<< "[" << std::setw(7) << levelStr << "]"	 // 日志级别
-					<< "[" << thread_id << "]"					 // 线程ID
-					<< "[" << name << "] "						 // 日志名称
+				oss << color << "[" << time_oss.str() << "]"				  // 时间戳
+					<< "[" << std::left << std::setw(7) << levelStr << "]"	  // 日志级别
+					<< "[" << thread_id << "]"								  // 线程ID
+					<< "[" << name << "] "									  // 日志名称
 					<< message << ColorReset << "\n";
 
 				std::string logEntry = oss.str();

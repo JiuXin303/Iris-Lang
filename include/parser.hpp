@@ -7,7 +7,7 @@
  *主机: LAPTOP-VAKT0BRG
  *--------------------------------------------------------------------------------
  *最后编辑作者: 九新
- *最后修改时间: 2025-06-09 03:50:03 Mon
+ *最后修改时间: 2025-06-09 19:00:16 Mon
  *--------------------------------------------------------------------------------
  *Copyright (c) 2025 九新
  *--------------------------------------------------------------------------------
@@ -20,8 +20,7 @@
 
 #pragma once
 
-#include "expr.hpp"
-
+#include <expr.hpp>
 #include <vector>
 
 namespace IrisLang
@@ -42,12 +41,9 @@ namespace IrisLang
 		* @brief 解析二元表达式
 		* @return std::vector<ExprNode*> 解析生成的表达式节点列表
 		*/
-		std::vector<ExprNode*> parseBinaryExpr();
+		std::vector<std::shared_ptr<ExprNode>> parseBinaryExpr();
 
-		~Parser()
-		{
-			for (auto expr: m_exprChildrens) delete expr;
-		}
+		~Parser() = default;
 
 		/**
 		* @brief 获取解析后的令牌序列
@@ -69,10 +65,10 @@ namespace IrisLang
 		* @param type 期望的令牌类型
 		* @return ExprNode* 解析生成的表达式节点
 		*/
-		ExprNode* parsePrimaryExpr(TokenType type);
+		std::shared_ptr<ExprNode> parsePrimaryExpr(TokenType type);
 
-		int m_position = 0;								///< 当前解析位置
-		std::vector<Token> m_tokens = {};				///< 令牌序列
-		std::vector<ExprNode*> m_exprChildrens = {};	///< 表达式节点列表
+		int m_position = 0;										   ///< 当前解析位置
+		std::vector<Token> m_tokens = {};						   ///< 令牌序列
+		std::vector<std::shared_ptr<ExprNode>> m_exprTree = {};	   ///< 表达式节点列表
 	};
 }	 // namespace IrisLang

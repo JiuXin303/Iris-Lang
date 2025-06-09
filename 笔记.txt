@@ -3,7 +3,7 @@ BinaryExpr:
 |—— NumberExpr
 |—— NumberToken 1
 |—— PlusToken +
-|—— NumberToken 2
+|—— NumberToken 1
 |—— NumberExpr
 |———— PlusToken +
-|———— NumberToken 3
+|———— NumberToken 2
